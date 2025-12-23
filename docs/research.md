@@ -106,4 +106,35 @@ Overall, this technology stack provides a balance of scalability, security, and 
 
 ## 3. Security Considerations
 
-(To be written)
+Security is a critical aspect of any multi-tenant SaaS application, as the system handles sensitive user and organizational data across multiple tenants. This project implements multiple security measures to ensure data protection, access control, and system integrity.
+
+### Data Isolation Strategy
+
+The most important security requirement in a multi-tenant system is strict data isolation between tenants. This is enforced at the backend level by associating every data record with a `tenant_id` and filtering all database queries using the authenticated user’s tenant information.
+
+The application never trusts client-provided tenant identifiers. Instead, the `tenant_id` is extracted from the JWT token after authentication and applied automatically to all database queries. Super admin users are an exception and have a `tenant_id` value of NULL, allowing them to access data across tenants.
+
+### Authentication and Authorization
+
+Authentication is implemented using JSON Web Tokens (JWT), providing stateless and secure user authentication. Tokens include only essential information such as user ID, tenant ID, and role, and have a fixed expiration time of 24 hours.
+
+Authorization is enforced using role-based access control (RBAC). Each API endpoint checks the user’s role before allowing access. This ensures that only authorized users can perform sensitive operations such as managing tenants, users, or subscription plans.
+
+### Password Security
+
+User passwords are securely stored using strong hashing algorithms such as bcrypt or Argon2. Plain text passwords are never stored in the database. During login, the provided password is verified by comparing its hash with the stored hash, ensuring secure authentication even if database credentials are compromised.
+
+### API Security Measures
+
+All API inputs are validated on the backend using validation libraries to ensure correct data formats and prevent malicious input. Enum values such as roles, statuses, and priorities are strictly validated. Proper HTTP status codes and consistent error responses are used to prevent information leakage and improve security.
+
+### Audit Logging
+
+To maintain accountability and traceability, all critical system actions such as user creation, project updates, task modifications, and tenant changes are logged in the `audit_logs` table. Audit logs include information about the user performing the action, the affected entity, and timestamps.
+
+### Token and Session Security
+
+JWT tokens have a fixed expiration period and are validated on every request. Sensitive information is never included in the token payload. While HTTPS is recommended for production deployments, the application is designed to support secure communication and token handling best practices.
+
+These security measures collectively ensure that the multi-tenant SaaS application maintains strong data protection, prevents unauthorized access, and follows industry-standard security practices.
+

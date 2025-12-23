@@ -65,7 +65,44 @@ By enforcing tenant isolation strictly at the backend level and never trusting c
 
 ## 2. Technology Stack Justification
 
-(To be written)
+Choosing the right technology stack is critical for building a scalable, secure, and maintainable multi-tenant SaaS application. The selected stack for this project was chosen based on industry best practices, project requirements, and ease of integration with Docker-based deployment.
+
+### Frontend: React (with Vite)
+
+React is a popular JavaScript library for building user interfaces using a component-based architecture. It allows the application to be broken down into reusable components, making the UI easy to maintain and extend. React is well suited for role-based user interfaces, where different users see different features based on their permissions.
+
+Vite is used as the build tool for React due to its fast development server and optimized build process. It provides quicker startup times compared to traditional tools and integrates well with Docker containers.
+
+### Backend: Node.js with Express
+
+Node.js is a widely used runtime for building scalable backend services using JavaScript. Express is a lightweight and flexible framework built on top of Node.js that simplifies REST API development.
+
+This combination is ideal for multi-tenant SaaS applications because it supports middleware-based architecture, making it easy to implement authentication, authorization, tenant isolation, and audit logging. The non-blocking I/O model of Node.js also ensures good performance under concurrent usage.
+
+### Database: PostgreSQL
+
+PostgreSQL is a powerful relational database known for its reliability, performance, and strong support for ACID transactions. It is well suited for multi-tenant systems that require strict data integrity and relational consistency.
+
+PostgreSQL supports foreign key constraints, indexing, and cascading deletes, which are essential for enforcing tenant isolation and maintaining relationships between users, projects, and tasks.
+
+### Authentication: JSON Web Tokens (JWT)
+
+JWT-based authentication is used to provide stateless and secure user authentication. Tokens contain essential user information such as user ID, tenant ID, and role, which allows the backend to enforce authorization rules without storing session data.
+
+JWT is ideal for containerized applications because it scales well and does not require shared session storage.
+
+### DevOps: Docker and Docker Compose
+
+Docker is used to containerize the backend, frontend, and database services. Docker Compose is used to orchestrate these services and allow the entire application to be started with a single command.
+
+This approach ensures consistent environments across development and evaluation systems and simplifies automated testing and deployment.
+
+### Documentation: Markdown
+
+Markdown is used for all documentation due to its simplicity and readability. It integrates well with GitHub repositories and allows clear presentation of technical content without additional tooling.
+
+Overall, this technology stack provides a balance of scalability, security, and developer productivity, making it suitable for a production-ready multi-tenant SaaS application.
+
 
 ## 3. Security Considerations
 

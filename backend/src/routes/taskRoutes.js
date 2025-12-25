@@ -13,4 +13,14 @@ router.post(
   createTask
 );
 
+const { listProjectTasks } = require('../controllers/taskController');
+
+router.get(
+  '/projects/:projectId/tasks',
+  authMiddleware,
+  tenantMiddleware,
+  listProjectTasks
+);
+
+
 module.exports = router;

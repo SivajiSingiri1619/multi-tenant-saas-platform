@@ -61,5 +61,66 @@ const listProjects = async (req, res) => {
   }
 };
 
+const updateProject = async (req, res) => {
+  try {
+    const tenantId = req.tenantId;
+    const userId = req.user.userId;
+    const projectId = req.params.projectId;
+    const { name, description, status } = req.body;
 
-module.exports = { createProject, listProjects };
+    const p = await pool.query(
+      'SELECT id, created_by FROM projects WHERE id = $1 AND tenant_id = $2',
+      [projectId, tenantId]
+    );
+
+    if (p.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'Project not found' });
+    }
+
+    const isAdmin = req.user.role === 'tenant_admin';
+    const isCreator = p.rows[0].created_by === userId;
+
+    if (!isAdmin && !isCreator) {
+      return res.status(403).json({ success: false, message: 'Not authorized' });
+    }
+
+    const fields = [];
+    const values = [];
+    let i = 1;
+
+    if (name !== undefined) {
+      fields.push(`name = $${i++}`);
+      values.push(name);
+    }
+    if (description !== undefined) {
+      fields.push(`description = $${i++}`);
+      values.push(description);
+    }
+    if (status !== undefined) {
+      fields.push(`status = $${i++}`);
+      values.push(status);
+    }
+
+    if (fields.length === 0) {
+      return res.status(400).json({ success: false, message: 'No fields to update' });
+    }
+
+    values.push(projectId, tenantId);
+
+    const q = `
+      UPDATE projects
+      SET ${fields.join(', ')}, updated_at = CURRENT_TIMESTAMP
+      WHERE id = $${i++} AND tenant_id = $${i}
+      RETURNING id, name, description, status, updated_at
+    `;
+
+    const r = await pool.query(q, values);
+
+    res.status(200).json({ success: true, data: r.rows[0] });
+  } catch {
+    res.status(500).json({ success: false, message: 'Update project failed' });
+  }
+};
+
+
+module.exports = { createProject, listProjects,updateProject };

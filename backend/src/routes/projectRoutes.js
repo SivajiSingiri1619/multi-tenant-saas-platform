@@ -22,6 +22,15 @@ router.get(
   listProjects
 );
 
+const { updateProject } = require('../controllers/projectController');
+
+router.put(
+  '/projects/:projectId',
+  authMiddleware,
+  tenantMiddleware,
+  updateProject
+);
+
 
 module.exports = router;
 

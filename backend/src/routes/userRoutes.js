@@ -16,3 +16,13 @@ router.get(
 );
 
 module.exports = router;
+
+const { addUser } = require('../controllers/userController');
+
+router.post(
+  '/tenants/:tenantId/users',
+  authMiddleware,
+  tenantMiddleware,
+  roleMiddleware(['tenant_admin']),
+  addUser
+);

@@ -13,4 +13,15 @@ router.post(
   createProject
 );
 
+const { listProjects } = require('../controllers/projectController');
+
+router.get(
+  '/projects',
+  authMiddleware,
+  tenantMiddleware,
+  listProjects
+);
+
+
 module.exports = router;
+

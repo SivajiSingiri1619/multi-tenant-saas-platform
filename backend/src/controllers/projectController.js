@@ -38,4 +38,28 @@ const createProject = async (req, res) => {
   }
 };
 
-module.exports = { createProject };
+const listProjects = async (req, res) => {
+  try {
+    const tenantId = req.tenantId;
+
+    const r = await pool.query(
+      `SELECT p.id, p.name, p.description, p.status, p.created_at,
+              u.id AS creator_id, u.full_name AS creator_name
+       FROM projects p
+       JOIN users u ON u.id = p.created_by
+       WHERE p.tenant_id = $1
+       ORDER BY p.created_at DESC`,
+      [tenantId]
+    );
+
+    res.status(200).json({
+      success: true,
+      data: { projects: r.rows, total: r.rows.length },
+    });
+  } catch (e) {
+    res.status(500).json({ success: false, message: 'List projects failed' });
+  }
+};
+
+
+module.exports = { createProject, listProjects };

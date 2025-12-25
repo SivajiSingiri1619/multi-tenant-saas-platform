@@ -3,6 +3,7 @@ const authRoutes = require('./routes/authRoutes');
 const authMiddleware = require('./middleware/authMiddleware');
 const roleMiddleware = require('./middleware/roleMiddleware');
 const tenantMiddleware = require('./middleware/tenantMiddleware');
+const userRoutes = require('./routes/userRoutes');
 
 const express = require('express');
 const cors = require('cors');
@@ -13,6 +14,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/api/auth', authRoutes);
+app.use('/api', userRoutes);
 
 // health check API
 app.get('/api/health', async (req, res) => {

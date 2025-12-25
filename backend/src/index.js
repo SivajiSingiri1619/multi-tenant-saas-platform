@@ -5,6 +5,8 @@ const roleMiddleware = require('./middleware/roleMiddleware');
 const tenantMiddleware = require('./middleware/tenantMiddleware');
 const userRoutes = require('./routes/userRoutes');
 const projectRoutes = require('./routes/projectRoutes');
+const taskRoutes = require('./routes/taskRoutes');
+
 
 
 const express = require('express');
@@ -18,6 +20,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api', projectRoutes);
+app.use('/api', taskRoutes);
 
 // health check API
 app.get('/api/health', async (req, res) => {

@@ -31,5 +31,14 @@ router.put(
   updateTask
 );
 
+const { updateTaskStatus } = require('../controllers/taskController');
+
+router.patch(
+  '/tasks/:taskId/status',
+  authMiddleware,
+  tenantMiddleware,
+  updateTaskStatus
+);
+
 
 module.exports = router;

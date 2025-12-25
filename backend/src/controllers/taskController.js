@@ -142,6 +142,39 @@ const updateTask = async (req, res) => {
   }
 };
 
-module.exports = { createTask, listProjectTasks, updateTask };
+const updateTaskStatus = async (req, res) => {
+  try {
+    const taskId = req.params.taskId;
+    const { status } = req.body;
+
+    if (!status) {
+      return res.status(400).json({ success: false, message: 'Status required' });
+    }
+
+    const r = await pool.query(
+      `UPDATE tasks
+       SET status = $1, updated_at = CURRENT_TIMESTAMP
+       WHERE id = $2 AND tenant_id = $3
+       RETURNING id, status, updated_at`,
+      [status, taskId, req.tenantId]
+    );
+
+    if (r.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'Task not found' });
+    }
+
+    res.status(200).json({ success: true, data: r.rows[0] });
+  } catch {
+    res.status(500).json({ success: false, message: 'Update status failed' });
+  }
+};
+
+module.exports = {
+  createTask,
+  listProjectTasks,
+  updateTask,
+  updateTaskStatus
+};
+
 
 

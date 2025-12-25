@@ -26,3 +26,22 @@ router.post(
   roleMiddleware(['tenant_admin']),
   addUser
 );
+
+const { updateUser } = require('../controllers/userController');
+
+router.put(
+  '/users/:userId',
+  authMiddleware,
+  tenantMiddleware,
+  updateUser
+);
+
+const { deleteUser } = require('../controllers/userController');
+
+router.delete(
+  '/users/:userId',
+  authMiddleware,
+  tenantMiddleware,
+  roleMiddleware(['tenant_admin']),
+  deleteUser
+);

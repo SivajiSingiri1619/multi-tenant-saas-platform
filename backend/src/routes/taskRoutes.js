@@ -22,5 +22,14 @@ router.get(
   listProjectTasks
 );
 
+const { updateTask } = require('../controllers/taskController');
+
+router.put(
+  '/tasks/:taskId',
+  authMiddleware,
+  tenantMiddleware,
+  updateTask
+);
+
 
 module.exports = router;

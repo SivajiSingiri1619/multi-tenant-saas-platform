@@ -122,5 +122,45 @@ const updateProject = async (req, res) => {
   }
 };
 
+const deleteProject = async (req, res) => {
+  try {
+    const tenantId = req.tenantId;
+    const userId = req.user.userId;
+    const projectId = req.params.projectId;
 
-module.exports = { createProject, listProjects,updateProject };
+    const p = await pool.query(
+      'SELECT id, created_by FROM projects WHERE id = $1 AND tenant_id = $2',
+      [projectId, tenantId]
+    );
+
+    if (p.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'Project not found' });
+    }
+
+    const isAdmin = req.user.role === 'tenant_admin';
+    const isCreator = p.rows[0].created_by === userId;
+
+    if (!isAdmin && !isCreator) {
+      return res.status(403).json({ success: false, message: 'Not authorized' });
+    }
+
+    await pool.query(
+      'DELETE FROM projects WHERE id = $1 AND tenant_id = $2',
+      [projectId, tenantId]
+    );
+
+    res.status(200).json({
+      success: true,
+      message: 'Project deleted successfully',
+    });
+  } catch {
+    res.status(500).json({ success: false, message: 'Delete project failed' });
+  }
+};
+
+module.exports = {
+  createProject,
+  listProjects,
+  updateProject,
+  deleteProject,
+};

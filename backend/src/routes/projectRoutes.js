@@ -31,6 +31,14 @@ router.put(
   updateProject
 );
 
+const { deleteProject } = require('../controllers/projectController');
+
+router.delete(
+  '/projects/:projectId',
+  authMiddleware,
+  tenantMiddleware,
+  deleteProject
+);
 
 module.exports = router;
 

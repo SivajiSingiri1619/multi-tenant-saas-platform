@@ -7,6 +7,7 @@ const userRoutes = require('./routes/userRoutes');
 const projectRoutes = require('./routes/projectRoutes');
 const taskRoutes = require('./routes/taskRoutes');
 const healthRoutes = require('./routes/healthRoutes');
+const tenantRoutes = require("./routes/tenantRoutes");
 
 
 
@@ -24,6 +25,8 @@ app.use('/api', userRoutes);
 app.use('/api', projectRoutes);
 app.use('/api', taskRoutes);
 app.use('/api', healthRoutes);
+app.use("/api", tenantRoutes);
+
 // health check API
 app.get('/api/health', async (req, res) => {
   const dbConnected = await connectDB();

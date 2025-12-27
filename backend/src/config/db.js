@@ -1,19 +1,19 @@
-const { Pool } = require("pg");
+const { Pool } = require('pg');
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === "production"
-    ? { rejectUnauthorized: false }
-    : false,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 const connectDB = async () => {
   try {
-    await pool.query("SELECT 1");
-    console.log("✅ Database connected successfully");
+    await pool.query('SELECT 1');
+    console.log("✅ Database connected");
     return true;
-  } catch (err) {
-    console.error("❌ Database connection failed:", err);
+  } catch (error) {
+    console.error("❌ DB connection error:", error.message);
     return false;
   }
 };

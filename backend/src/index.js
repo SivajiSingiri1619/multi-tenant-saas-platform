@@ -85,14 +85,7 @@ app.get(
   }
 );
 
-const { connectDB } = require("./config/db");
 
-(async () => {
-  const ok = await connectDB();
-  if (!ok) {
-    console.error("❌ DB NOT CONNECTED – EXITING");
-  }
-})();
 
 const PORT = process.env.PORT || 5000;
 
